@@ -6,18 +6,15 @@ const SEARCH_TAG = "workout";
 
 var Timer = function() {
   this.button = undefined;
-  this.clock = undefined;
   this._startTime = undefined;
   this._intervalTimer = undefined;
+  this._currentElapsedSeconds = null;
 };
 Timer.prototype = {
   constructor: Timer,
   addButton: function(el) {
     this.button = el;
     this.button.onclick = this.start.bind(this);
-  },
-  addClock: function(el) {
-    this.clock = el;
     this.reset();
   },
   start: function() {
@@ -40,16 +37,10 @@ Timer.prototype = {
     }
   },
   set: function(elapsed) {
-    function pad(num) {
-      return ("0" + num).slice(-2);
-    }
-    var minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
-
-    var newCountdown = pad(minutes) + ":" + pad(seconds);
-    if (this.clock.innerHTML !== newCountdown) {
-      this.clock.innerHTML = newCountdown;
-      var evt = new CustomEvent("clockChanged", {detail: {seconds: minutes * 60 + seconds}});
+    var elapsedSeconds = Math.floor(elapsed / 1000);
+    if (elapsedSeconds !== this._currentElapsedSeconds) {
+      this._currentElapsedSeconds = elapsedSeconds;
+      var evt = new CustomEvent("clockChanged", {detail: {seconds: elapsedSeconds}});
       document.dispatchEvent(evt);
     }
   },
@@ -144,6 +135,20 @@ function newGifToCache() {
   });
 }
 
+function updateClock(seconds) {
+  function pad(num) {
+    return ("0" + num).slice(-2);
+  }
+  var minutesValue = Math.floor((seconds % (1000 * 60 * 60)) / 60);
+  var secondsValue = Math.floor((seconds % (1000 * 60)));
+
+  var newCountdown = pad(minutesValue) + ":" + pad(secondsValue);
+  var clock = document.getElementById("clock")
+  if (clock.innerHTML !== newCountdown) {
+    clock.innerHTML = newCountdown;
+  }
+}
+
 var buzzer = new Audio("airhorn.mp3");
 
 var lastShownGifSecond = 0;
@@ -151,11 +156,10 @@ var timer = new Timer();
 var currentGif;
 document.addEventListener("clockChanged", function(evt) {
   var seconds = evt.detail.seconds;
-  if (seconds - lastShownGifSecond >= 3) {
-    if (currentGif) {
-      currentGif.close();
-      currentGif = undefined;
-    }
+  updateClock(seconds);
+  if (currentGif && (seconds - lastShownGifSecond >= 3)) {
+    currentGif.close();
+    currentGif = undefined;
   }
   if (seconds === 0) {
     // ignore reset
@@ -177,7 +181,6 @@ document.addEventListener("clockChanged", function(evt) {
   }
 });
 timer.addButton(document.getElementById("start"));
-timer.addClock(document.getElementById("clock"));
 
 // prime gif cache
 newGifToCache();
