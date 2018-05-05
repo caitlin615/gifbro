@@ -15,7 +15,7 @@ Powered by [Giphy](https://giphy.com/).
 - [x] Env var for API key
 - [ ] enlarge smaller gifs
 - [x] onClockChanged should be a `CustomEvent`
-- [ ] Pause the timer instead of just resetting it
+- [x] Pause the timer instead of just resetting it
 - [x] Audio on interval changes
 
 ### Giphy API Key

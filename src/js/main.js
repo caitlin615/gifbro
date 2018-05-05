@@ -6,9 +6,9 @@ const SEARCH_TAG = "workout";
 
 var Timer = function() {
   this.button = undefined;
-  this._startTime = undefined;
+  this._startTime = null;
   this._intervalTimer = undefined;
-  this._currentElapsedSeconds = null;
+  this._currentElapsed = null;
 };
 Timer.prototype = {
   constructor: Timer,
@@ -19,9 +19,11 @@ Timer.prototype = {
   },
   start: function() {
     // TODO: Continue from where left off
-    this.button.onclick = this.stop.bind(this);
-    this.button.textContent = "Stop";
-    this._startTime = performance.now();
+    this.button.onclick = this.pause.bind(this);
+    this.button.textContent = "Pause";
+    if (!this._startTime) {
+      this._startTime = performance.now();
+    }
     this._intervalTimer = setInterval(function() {
       var now = performance.now();
       var elapsed = Math.floor(now - this._startTime);
@@ -36,15 +38,30 @@ Timer.prototype = {
       clearInterval(this._intervalTimer);
     }
   },
+  pause: function() {
+    this.button.onclick = this.resume.bind(this);
+    this.button.textContent = "Resume";
+    if (this._intervalTimer) {
+      clearInterval(this._intervalTimer);
+    }
+  },
+  resume: function() {
+    this.button.onclick = this.pause.bind(this);
+    this.button.textContent = "Pause";
+    this._startTime = performance.now() - this._currentElapsed;
+    this.start();
+  },
   set: function(elapsed) {
     var elapsedSeconds = Math.floor(elapsed / 1000);
-    if (elapsedSeconds !== this._currentElapsedSeconds) {
-      this._currentElapsedSeconds = elapsedSeconds;
+    var currentElapsed = Math.floor(this._currentElapsed / 1000);
+    if (this._currentElapsed === null || elapsedSeconds !== currentElapsed) {
+      this._currentElapsed = elapsed;
       var evt = new CustomEvent("clockChanged", {detail: {seconds: elapsedSeconds}});
       document.dispatchEvent(evt);
     }
   },
   reset: function() {
+    this._startTime = null;
     this.set(0);
   }
 };
@@ -150,10 +167,10 @@ function updateClock(seconds) {
 }
 
 var buzzer = new Audio("airhorn.mp3");
-
-var lastShownGifSecond = 0;
-var timer = new Timer();
 var currentGif;
+var lastShownGifSecond = 0;
+
+var timer = new Timer();
 document.addEventListener("clockChanged", function(evt) {
   var seconds = evt.detail.seconds;
   updateClock(seconds);
@@ -181,6 +198,6 @@ document.addEventListener("clockChanged", function(evt) {
   }
 });
 timer.addButton(document.getElementById("start"));
-
+document.getElementById("stop").onclick = timer.stop.bind(timer);
 // prime gif cache
 newGifToCache();

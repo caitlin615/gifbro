@@ -17,7 +17,7 @@ body {
   margin: auto;
 }
 
-a#start {
+a.btn {
   color: white;
   text-align: center;
   font-weight: 400;
@@ -29,8 +29,9 @@ a#start {
   letter-spacing: 0.05em;
   border: 2px solid white;
   border-radius: 2em;
+  margin-bottom: 5px;
 }
-a#start:hover {
+a.btn:hover {
   /* 15% white */
   background: rgba(255,255,255,.15);
 }
