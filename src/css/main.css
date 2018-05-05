@@ -53,3 +53,8 @@ a#start:hover {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+input[type=number] {
+  width: 25px;
+  margin: 0 auto;
+}

@@ -109,16 +109,20 @@ function showGif(url) {
   };
 }
 
+function randomGif() {
+  getRandomGif().then(showGif).catch(closeGif);
+}
+
 var timer = new Timer();
 timer.onClockChanged = function(minutes, seconds) {
   if (minutes === 0 && seconds === 0) {
     // ignore reset
     return;
   }
-  // show every 10 seconds
-  if (seconds % 10 === 0) {
+  var showGifInterval = document.getElementById("interval").value;
+  if (seconds % showGifInterval === 0) {
     console.log("showing random gif:", minutes, seconds);
-    getRandomGif().then(showGif).catch(closeGif);
+    randomGif();
   }
 };
 timer.addButton(document.getElementById("start"));
