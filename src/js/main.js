@@ -4,10 +4,6 @@ const GIPHY_BASE_URL = "https://api.giphy.com";
 const GIPHY_RANDOM_PATH = "/v1/gifs/random";
 const SEARCH_TAG = "workout";
 
-function pad(num) {
-  return ("0" + num).slice(-2);
-}
-
 var Timer = function() {
   this.button = undefined;
   this.clock = undefined;
@@ -48,6 +44,9 @@ Timer.prototype = {
     }
   },
   set: function(elapsed) {
+    function pad(num) {
+      return ("0" + num).slice(-2);
+    }
     var minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
 
