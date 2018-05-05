@@ -1,0 +1,32 @@
+body {
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
+
+#clock {
+  justify-content: center;
+  color: white;
+  font-size: 5em;
+  margin: auto;
+}
+
+a#start {
+  color: white;
+  text-align: center;
+  font-weight: 400;
+  display: inline-block;
+  padding: 1.1em 2.5em;
+  margin: 0;
+  line-height: 1em;
+  transition: all 0.2s;
+  letter-spacing: 0.05em;
+  border: 2px solid white;
+  border-radius: 2em;
+}
+a#start:hover {
+  /* 15% white */
+  background: rgba(255,255,255,.15);
+}
