@@ -12,8 +12,13 @@ Powered by [Giphy](https://giphy.com/).
 - [ ] animations for showing/closing gif
 - [ ] add motivational quotes
 - [ ] add text for interval input to explain it
-- [ ] Env var for API key
+- [x] Env var for API key
 - [ ] enlarge smaller gifs
 - [ ] onClockChanged should be a `CustomEvent`
 - [ ] Pause the timer instead of just resetting it
 - [ ] Audio on interval changes
+
+### Giphy API Key
+Create a Giphy Application and get an API Key [here](https://developers.giphy.com/).
+
+You should then create the file `src/js/config.js` and define your Giphy API Key as `GIPHY_API_KEY`. This file is git-ignored and shouldn't be committed.

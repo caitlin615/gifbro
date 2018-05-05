@@ -64,6 +64,10 @@ Timer.prototype = {
 
 function getRandomGif() {
   return new Promise(function(resolve, reject) {
+    if (!GIPHY_API_KEY) {
+      reject("GIPHY_API_KEY is not defined.");
+      return;
+    }
     var req = new XMLHttpRequest();
     req.addEventListener("load", function(e) {
       var resp = JSON.parse(req.response);
@@ -76,7 +80,7 @@ function getRandomGif() {
       resolve(resp.data.image_url);
     });
     var params = {
-      "api_key": "myKey", // TODO: env var
+      "api_key": GIPHY_API_KEY,
       "tag": SEARCH_TAG,
       "rating": "g",
       "fmt": "json", // json is the default
