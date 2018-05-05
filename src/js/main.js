@@ -21,10 +21,10 @@ Timer.prototype = {
     // TODO: Continue from where left off
     this.button.onclick = this.stop.bind(this);
     this.button.textContent = "Stop";
-    this._startTime = new Date().getTime();
+    this._startTime = performance.now();
     this._intervalTimer = setInterval(function() {
-      var now = new Date().getTime();
-      var elapsed = now - this._startTime;
+      var now = performance.now();
+      var elapsed = Math.floor(now - this._startTime);
       this.set(elapsed);
     }.bind(this), 100); // TODO: longer interval? using 1000 means an update might be missed
   },
