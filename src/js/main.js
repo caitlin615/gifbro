@@ -62,6 +62,30 @@ Timer.prototype = {
   }
 };
 
+var GIF = function(url) {
+  this.image = new Image();
+  this.image.src = url;
+  this.loaded = false;
+  this.image.onload = function() {
+    this.loaded = true;
+  }.bind(this);
+}
+
+GIF.prototype = {
+  constructor: GIF,
+  show: function() {
+    document.getElementById("overlay").classList.remove("hidden");
+    var gifImage = document.getElementById("gif");
+    gifImage.setAttribute("src", this.image.src);
+    // TODO: coordinate with the Timer instead of setTimeout
+    setTimeout(GIF.close, 3000);
+  },
+};
+GIF.close = function() {
+  document.getElementById("overlay").classList.add("hidden");
+  document.getElementById("gif").removeAttribute("src");
+};
+
 function getRandomGif() {
   return new Promise(function(resolve, reject) {
     if (!GIPHY_API_KEY) {
@@ -96,25 +120,23 @@ function getRandomGif() {
   });
 }
 
-function closeGif(err) {
-  if (err) {
-    console.warn(err);
-  }
-  document.getElementById("overlay").classList.add("hidden");
-  document.getElementById("gif").removeAttribute("src");
-}
-function showGif(url) {
-  document.getElementById("overlay").classList.remove("hidden");
-  var gifImage = document.getElementById("gif");
-  gifImage.setAttribute("src", url);
-  gifImage.onload = function() {
-    // TODO: coordinate with the Timer instead of setTimeout
-    setTimeout(closeGif, 3000);
-  };
-}
+var gifCache = {
+  cache: [],
+  push: function(url) {
+    gifCache.cache.push(new GIF(url));
+  },
+  pop: function() {
+    var item = gifCache.cache.pop();
+    if (item && item.loaded) {
+      return item;
+    }
+    gifCache.cache.push(item);
+    return null;
+  },
+};
 
-function randomGif() {
-  getRandomGif().then(showGif).catch(closeGif);
+function newGifToCache() {
+  getRandomGif().then(gifCache.push).catch(console.warn);
 }
 
 var timer = new Timer();
@@ -126,8 +148,17 @@ timer.onClockChanged = function(minutes, seconds) {
   var showGifInterval = document.getElementById("interval").value;
   if (seconds % showGifInterval === 0) {
     console.log("showing random gif:", minutes, seconds);
-    randomGif();
+    var cached = gifCache.pop();
+    if (cached) {
+      cached.show();
+    }
+    if (gifCache.cache.length < 5) {
+      newGifToCache();
+    }
   }
 };
 timer.addButton(document.getElementById("start"));
 timer.addClock(document.getElementById("clock"));
+
+// prime gif cache
+newGifToCache();
