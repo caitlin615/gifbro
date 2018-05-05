@@ -20,10 +20,6 @@ Timer.prototype = {
     this.clock = el;
     this.reset();
   },
-  onClockChanged: function(seconds) {
-    // TODO: use built-in eventing
-    console.warn("onClockChanged should be overwritten");
-  },
   start: function() {
     // TODO: Continue from where left off
     this.button.onclick = this.stop.bind(this);
@@ -52,8 +48,9 @@ Timer.prototype = {
 
     var newCountdown = pad(minutes) + ":" + pad(seconds);
     if (this.clock.innerHTML !== newCountdown) {
-      this.clock.innerHTML = newCountdown
-      this.onClockChanged(minutes * 60 + seconds);
+      this.clock.innerHTML = newCountdown;
+      var evt = new CustomEvent("clockChanged", {detail: {seconds: minutes * 60 + seconds}});
+      document.dispatchEvent(evt);
     }
   },
   reset: function() {
@@ -152,7 +149,8 @@ var buzzer = new Audio("airhorn.mp3");
 var lastShownGifSecond = 0;
 var timer = new Timer();
 var currentGif;
-timer.onClockChanged = function(seconds) {
+document.addEventListener("clockChanged", function(evt) {
+  var seconds = evt.detail.seconds;
   if (seconds - lastShownGifSecond >= 3) {
     if (currentGif) {
       currentGif.close();
@@ -177,7 +175,7 @@ timer.onClockChanged = function(seconds) {
       newGifToCache();
     }
   }
-};
+});
 timer.addButton(document.getElementById("start"));
 timer.addClock(document.getElementById("clock"));
 

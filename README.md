@@ -14,7 +14,7 @@ Powered by [Giphy](https://giphy.com/).
 - [x] add text for interval input to explain it
 - [x] Env var for API key
 - [ ] enlarge smaller gifs
-- [ ] onClockChanged should be a `CustomEvent`
+- [x] onClockChanged should be a `CustomEvent`
 - [ ] Pause the timer instead of just resetting it
 - [x] Audio on interval changes
 
