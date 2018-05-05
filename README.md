@@ -11,12 +11,12 @@ Powered by [Giphy](https://giphy.com/).
 - [x] use timer to keep track of closing the gif.
 - [x] animations for showing/closing gif
 - [ ] add motivational quotes
-- [ ] add text for interval input to explain it
+- [x] add text for interval input to explain it
 - [x] Env var for API key
 - [ ] enlarge smaller gifs
 - [ ] onClockChanged should be a `CustomEvent`
 - [ ] Pause the timer instead of just resetting it
-- [ ] Audio on interval changes
+- [x] Audio on interval changes
 
 ### Giphy API Key
 Create a Giphy Application and get an API Key [here](https://developers.giphy.com/).

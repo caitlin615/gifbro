@@ -6,7 +6,14 @@
   <script src="src/js/config.js"></script>
 </head>
 <body>
-  <input id="interval" type="number" value="5" min="5" max="60" step="5">
+  <div class="settings">
+    <input id="interval" type="number" value="5" min="5" max="60" step="5">
+    <label for="interval">second intervals</label>
+  </div>
+  <div class="settings">
+    <input type="checkbox" id="buzzer">
+    <label for="buzzer">Enable buzzer?</label>
+  </div>
   <div id="clock"></div>
   <a id="start">Start</a>
   <script src="src/js/main.js"></script>

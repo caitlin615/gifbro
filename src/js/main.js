@@ -147,6 +147,8 @@ function newGifToCache() {
   });
 }
 
+var buzzer = new Audio("airhorn.mp3");
+
 var lastShownGifSecond = 0;
 var timer = new Timer();
 var currentGif;
@@ -163,11 +165,13 @@ timer.onClockChanged = function(seconds) {
   }
   var showGifInterval = document.getElementById("interval").value;
   if (seconds % showGifInterval === 0) {
-    console.log("showing random gif:", seconds);
     currentGif = gifCache.pop();
     if (currentGif) {
       currentGif.show();
       lastShownGifSecond = seconds;
+    }
+    if (document.getElementById("buzzer").checked) {
+      buzzer.play();
     }
     if (gifCache.cache.length < 5) {
       newGifToCache();
