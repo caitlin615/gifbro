@@ -142,7 +142,9 @@ var gifCache = {
 };
 
 function newGifToCache() {
-  getRandomGif().then(gifCache.push).catch(console.warn);
+  getRandomGif().then(gifCache.push).catch(function(err) {
+    throw new Error(err);
+  });
 }
 
 var lastShownGifSecond = 0;
