@@ -1,9 +1,13 @@
 body {
   background-color: black;
   display: flex;
+  position: relative;
   flex-direction: column;
   flex-wrap: nowrap;
   font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
+.hidden {
+  display: none !important;
 }
 
 #clock {
@@ -29,4 +33,23 @@ a#start {
 a#start:hover {
   /* 15% white */
   background: rgba(255,255,255,.15);
+}
+
+#overlay {
+  background-color: white;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10; /* TODO: danger will robinson, what if other elements use z-index? */
+  background-color: rgba(0,0,0,0.5); /*dim the background*/
+}
+
+#gif {
+  max-width: 100%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

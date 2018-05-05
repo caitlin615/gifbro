@@ -1,5 +1,9 @@
 "use strict";
 
+const GIPHY_BASE_URL = "https://api.giphy.com";
+const GIPHY_RANDOM_PATH = "/v1/gifs/random";
+const SEARCH_TAG = "lifting";
+
 function pad(num) {
   return ("0" + num).slice(-2);
 }
@@ -56,3 +60,54 @@ Timer.prototype = {
 var timer = new Timer();
 timer.addButton(document.getElementById("start"));
 timer.addClock(document.getElementById("clock"));
+
+function getRandomGif() {
+  return new Promise(function(resolve, reject) {
+    var req = new XMLHttpRequest();
+    req.addEventListener("load", function(e) {
+      var resp = JSON.parse(req.response);
+      console.log(resp);
+      if (resp.meta.status !== 200) {
+        reject(resp.meta.msg);
+        return
+      }
+      // TODO: Return the image dimensions so gifs can be sized nicely in the DOM.
+      // seems unnecessary at this point, but might be a nice feature, especially for smaller gif sizes
+      resolve(resp.data.image_url);
+    });
+    var params = {
+      "api_key": "myKey", // TODO: env var
+      "tag": SEARCH_TAG,
+      "rating": "g",
+      "fmt": "json", // json is the default
+    };
+
+    var query_params_string = "?";
+    Object.keys(params).forEach(function(key) {
+      query_params_string = query_params_string.concat(key + "=" + params[key] + "&");
+    });
+    var url = GIPHY_BASE_URL + GIPHY_RANDOM_PATH + query_params_string;
+    req.open("GET", url);
+    req.send();
+  });
+}
+
+function closeGif(err) {
+  if (err) {
+    console.warn(err);
+  }
+  document.getElementById("overlay").classList.add("hidden");
+  document.getElementById("gif").removeAttribute("src");
+}
+function showGif(url) {
+  document.getElementById("overlay").classList.remove("hidden");
+  var gifImage = document.getElementById("gif");
+  gifImage.setAttribute("src", url);
+  gifImage.onload = function() {
+    // TODO: coordinate with the Timer instead of setTimeout
+    setTimeout(closeGif, 3000);
+  };
+}
+
+
+getRandomGif().then(showGif).catch(closeGif);
