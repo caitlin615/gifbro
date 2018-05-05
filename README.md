@@ -9,7 +9,7 @@ Powered by [Giphy](https://giphy.com/).
 ### TODO
 - [x] pre-load next gif
 - [x] use timer to keep track of closing the gif.
-- [ ] animations for showing/closing gif
+- [x] animations for showing/closing gif
 - [ ] add motivational quotes
 - [ ] add text for interval input to explain it
 - [x] Env var for API key

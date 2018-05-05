@@ -63,23 +63,33 @@ Timer.prototype = {
 
 var GIF = function(url) {
   this.image = new Image();
+  this.image.id = "gif";
   this.image.src = url;
   this.loaded = false;
   this.image.onload = function() {
     this.loaded = true;
   }.bind(this);
+
+  this.overlay = document.createElement("div");
+  this.overlay.id = "overlay";
+  this.overlay.appendChild(this.image);
 }
 
 GIF.prototype = {
   constructor: GIF,
   show: function() {
-    document.getElementById("overlay").classList.remove("hidden");
-    document.getElementById("gif").setAttribute("src", this.image.src);
+    document.body.appendChild(this.overlay);
+    this.overlay.addEventListener("animationend", function() {
+      this.overlay.classList.remove("fadeIn");
+    }.bind(this));
+    this.overlay.classList.add("fadeIn");
   },
-};
-GIF.close = function() {
-  document.getElementById("overlay").classList.add("hidden");
-  document.getElementById("gif").removeAttribute("src");
+  close: function() {
+    this.overlay.addEventListener("animationend", function() {
+      this.overlay.parentElement.removeChild(this.overlay);
+    }.bind(this));
+    this.overlay.classList.add("fadeOut");
+  }
 };
 
 function getRandomGif() {
@@ -137,9 +147,13 @@ function newGifToCache() {
 
 var lastShownGifSecond = 0;
 var timer = new Timer();
+var currentGif;
 timer.onClockChanged = function(seconds) {
   if (seconds - lastShownGifSecond >= 3) {
-    GIF.close();
+    if (currentGif) {
+      currentGif.close();
+      currentGif = undefined;
+    }
   }
   if (seconds === 0) {
     // ignore reset
@@ -148,9 +162,9 @@ timer.onClockChanged = function(seconds) {
   var showGifInterval = document.getElementById("interval").value;
   if (seconds % showGifInterval === 0) {
     console.log("showing random gif:", seconds);
-    var cached = gifCache.pop();
-    if (cached) {
-      cached.show();
+    currentGif = gifCache.pop();
+    if (currentGif) {
+      currentGif.show();
       lastShownGifSecond = seconds;
     }
     if (gifCache.cache.length < 5) {
