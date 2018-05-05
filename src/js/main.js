@@ -2,7 +2,7 @@
 
 const GIPHY_BASE_URL = "https://api.giphy.com";
 const GIPHY_RANDOM_PATH = "/v1/gifs/random";
-const SEARCH_TAG = "lifting";
+const SEARCH_TAG = "workout";
 
 function pad(num) {
   return ("0" + num).slice(-2);
