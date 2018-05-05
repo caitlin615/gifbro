@@ -24,6 +24,10 @@ Timer.prototype = {
     this.clock = el;
     this.reset();
   },
+  onClockChanged: function(minutes, seconds) {
+    // TODO: use built-in eventing
+    console.warn("onClockChanged should be overwritten");
+  },
   start: function() {
     // TODO: Continue from where left off
     this.button.onclick = this.stop.bind(this);
@@ -50,6 +54,7 @@ Timer.prototype = {
     var newCountdown = pad(minutes) + ":" + pad(seconds);
     if (this.clock.innerHTML !== newCountdown) {
       this.clock.innerHTML = newCountdown
+      this.onClockChanged(minutes, seconds);
     }
   },
   reset: function() {
@@ -57,19 +62,14 @@ Timer.prototype = {
   }
 };
 
-var timer = new Timer();
-timer.addButton(document.getElementById("start"));
-timer.addClock(document.getElementById("clock"));
-
 function getRandomGif() {
   return new Promise(function(resolve, reject) {
     var req = new XMLHttpRequest();
     req.addEventListener("load", function(e) {
       var resp = JSON.parse(req.response);
-      console.log(resp);
       if (resp.meta.status !== 200) {
         reject(resp.meta.msg);
-        return
+        return;
       }
       // TODO: Return the image dimensions so gifs can be sized nicely in the DOM.
       // seems unnecessary at this point, but might be a nice feature, especially for smaller gif sizes
@@ -109,5 +109,17 @@ function showGif(url) {
   };
 }
 
-
-getRandomGif().then(showGif).catch(closeGif);
+var timer = new Timer();
+timer.onClockChanged = function(minutes, seconds) {
+  if (minutes === 0 && seconds === 0) {
+    // ignore reset
+    return;
+  }
+  // show every 10 seconds
+  if (seconds % 10 === 0) {
+    console.log("showing random gif:", minutes, seconds);
+    getRandomGif().then(showGif).catch(closeGif);
+  }
+};
+timer.addButton(document.getElementById("start"));
+timer.addClock(document.getElementById("clock"));
