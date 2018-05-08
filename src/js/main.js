@@ -21,6 +21,7 @@ Timer.prototype = {
     // TODO: Continue from where left off
     this.button.onclick = this.pause.bind(this);
     this.button.textContent = "Pause";
+    this.button.classList.add("paused");
     if (!this._startTime) {
       this._startTime = performance.now();
     }
@@ -33,6 +34,7 @@ Timer.prototype = {
   stop: function() {
     this.button.onclick = this.start.bind(this);
     this.button.textContent = "Start";
+    this.button.classList.remove("paused");
     this.reset();
     if (this._intervalTimer) {
       clearInterval(this._intervalTimer);
@@ -41,6 +43,7 @@ Timer.prototype = {
   pause: function() {
     this.button.onclick = this.resume.bind(this);
     this.button.textContent = "Resume";
+    this.button.classList.remove("paused");
     if (this._intervalTimer) {
       clearInterval(this._intervalTimer);
     }
@@ -48,6 +51,7 @@ Timer.prototype = {
   resume: function() {
     this.button.onclick = this.pause.bind(this);
     this.button.textContent = "Pause";
+    this.button.classList.add("paused");
     this._startTime = performance.now() - this._currentElapsed;
     this.start();
   },

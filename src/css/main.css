@@ -36,6 +36,16 @@ a.btn:hover {
   background: rgba(255,255,255,.15);
 }
 
+/* TODO: More subtle colors */
+#start {
+  background-color: green;
+}
+#start.paused {
+  background-color: orange;
+}
+#stop {
+  background-color: red;
+}
 #overlay {
   background-color: white;
   position: absolute;
