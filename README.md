@@ -17,6 +17,7 @@ Powered by [Giphy](https://giphy.com/).
 - [x] onClockChanged should be a `CustomEvent`
 - [x] Pause the timer instead of just resetting it
 - [x] Audio on interval changes
+- [ ] Welcome popup
 
 ### Giphy API Key
 Create a Giphy Application and get an API Key [here](https://developers.giphy.com/).
