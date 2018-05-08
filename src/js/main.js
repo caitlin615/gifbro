@@ -99,9 +99,9 @@ GIF.prototype = {
 
 function getRandomGif() {
   return new Promise(function(resolve, reject) {
-    if (!GIPHY_API_KEY) {
-      reject("GIPHY_API_KEY is not defined.");
-      return;
+    var apiKey = window.GIPHY_API_KEY;
+    if (!apiKey) {
+      apiKey = "KTCS2iWTwvZXUiTx1ciM5JEQ0QMQ0YHQ";
     }
     var req = new XMLHttpRequest();
     req.addEventListener("load", function(e) {
@@ -115,7 +115,7 @@ function getRandomGif() {
       resolve(resp.data.image_url);
     });
     var params = {
-      "api_key": GIPHY_API_KEY,
+      "api_key": apiKey,
       "tag": SEARCH_TAG,
       "rating": "g",
       "fmt": "json", // json is the default
