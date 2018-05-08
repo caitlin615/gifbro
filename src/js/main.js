@@ -101,7 +101,7 @@ function getRandomGif() {
   return new Promise(function(resolve, reject) {
     var apiKey = window.GIPHY_API_KEY;
     if (!apiKey) {
-      apiKey = "KTCS2iWTwvZXUiTx1ciM5JEQ0QMQ0YHQ";
+      apiKey = "KTCS2iWTwvZXUiTx1ciM5JEQ0QMQ0YHQ"; // FIXME: This isn't good practice, but should get it working with github pages
     }
     var req = new XMLHttpRequest();
     req.addEventListener("load", function(e) {
