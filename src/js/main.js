@@ -156,8 +156,8 @@ function updateClock(seconds) {
   function pad(num) {
     return ("0" + num).slice(-2);
   }
-  var minutesValue = Math.floor((seconds % (1000 * 60 * 60)) / 60);
-  var secondsValue = Math.floor((seconds % (1000 * 60)));
+  var minutesValue = Math.floor((seconds % (1000 * 60)) / 60);
+  var secondsValue = Math.floor((seconds % 60));
 
   var newCountdown = pad(minutesValue) + ":" + pad(secondsValue);
   var clock = document.getElementById("clock")
