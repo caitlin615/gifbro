@@ -78,26 +78,22 @@ var GIF = function(url) {
   this.image.onload = function() {
     this.loaded = true;
   }.bind(this);
-
-  this.overlay = document.createElement("div");
-  this.overlay.id = "overlay";
-  this.overlay.appendChild(this.image);
 }
 
 GIF.prototype = {
   constructor: GIF,
   show: function() {
-    document.body.appendChild(this.overlay);
-    this.overlay.addEventListener("animationend", function() {
-      this.overlay.classList.remove("fadeIn");
+    document.body.appendChild(this.image);
+    this.image.addEventListener("animationend", function() {
+      this.image.classList.remove("fadeIn");
     }.bind(this));
-    this.overlay.classList.add("fadeIn");
+    this.image.classList.add("fadeIn");
   },
   close: function() {
-    this.overlay.addEventListener("animationend", function() {
-      this.overlay.parentElement.removeChild(this.overlay);
+    this.image.addEventListener("animationend", function() {
+      this.image.parentElement.removeChild(this.image);
     }.bind(this));
-    this.overlay.classList.add("fadeOut");
+    this.image.classList.add("fadeOut");
   }
 };
 
