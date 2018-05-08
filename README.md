@@ -1,7 +1,7 @@
-GifBro: For the Gym Bro -- The World's ONLY Gif-Powered Workout Timer!
+GIFBro: For the Gym Bro -- The World's ONLY GIF-Powered Workout Timer!
 ---------
 
-A simple workout timer that shows you a random gif on an interval to help motivate you
+A simple workout timer that shows you a random GIF on an interval to help motivate you
 through your workout.
 
 Powered by [Giphy](https://giphy.com/).
