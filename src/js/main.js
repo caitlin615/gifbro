@@ -2,6 +2,7 @@
 
 const GIPHY_BASE_URL = "https://api.giphy.com";
 const GIPHY_RANDOM_PATH = "/v1/gifs/random";
+const GIPHY_SEARCH_PATH = "/v1/gifs/search";
 const SEARCH_TAG = "workout";
 
 var Timer = function() {
@@ -97,12 +98,49 @@ GIF.prototype = {
   }
 };
 
+function getAPIKey() {
+  var apiKey = window.GIPHY_API_KEY;
+  if (!apiKey) {
+    apiKey = "KTCS2iWTwvZXUiTx1ciM5JEQ0QMQ0YHQ"; // FIXME: This isn't good practice, but should get it working with github pages
+  }
+  return apiKey;
+}
+var searchOffset = 0;
+function searchGIF(query) {
+  return new Promise(function(resolve, reject) {
+    var req = new XMLHttpRequest();
+    req.addEventListener("load", function(e) {
+      var resp = JSON.parse(req.response);
+      if (resp.meta.status !== 200) {
+        reject(resp.meta.msg);
+        return;
+      }
+      var gifs = resp.data.map(function(a) {
+        return a.images.original.url;
+      });
+      searchOffset += resp.data.length;
+      resolve(gifs);
+    });
+    var params = {
+      "api_key": getAPIKey(),
+      "q": query,
+      "limit": 5, // default: 25 TODO: paging
+      "offset": searchOffset, // default: 0
+      "rating": "g",
+      "fmt": "json", // json is the default
+    };
+
+    var query_params_string = "?";
+    Object.keys(params).forEach(function(key) {
+      query_params_string = query_params_string.concat(key + "=" + params[key] + "&");
+    });
+    var url = GIPHY_BASE_URL + GIPHY_SEARCH_PATH + query_params_string;
+    req.open("GET", url);
+    req.send();
+  });
+}
 function getRandomGif() {
   return new Promise(function(resolve, reject) {
-    var apiKey = window.GIPHY_API_KEY;
-    if (!apiKey) {
-      apiKey = "KTCS2iWTwvZXUiTx1ciM5JEQ0QMQ0YHQ"; // FIXME: This isn't good practice, but should get it working with github pages
-    }
     var req = new XMLHttpRequest();
     req.addEventListener("load", function(e) {
       var resp = JSON.parse(req.response);
@@ -115,7 +153,7 @@ function getRandomGif() {
       resolve(resp.data.image_url);
     });
     var params = {
-      "api_key": apiKey,
+      "api_key": getAPIKey(),
       "tag": SEARCH_TAG,
       "rating": "g",
       "fmt": "json", // json is the default
@@ -147,7 +185,11 @@ var gifCache = {
 };
 
 function newGifToCache() {
-  getRandomGif().then(gifCache.push).catch(function(err) {
+  searchGIF(SEARCH_TAG).then(function(gifs) {
+    gifs.forEach(function(gif) {
+      gifCache.push(gif);
+    });
+  }).catch(function(err) {
     throw new Error(err);
   });
 }
@@ -192,7 +234,7 @@ document.addEventListener("clockChanged", function(evt) {
     if (document.getElementById("buzzer").checked) {
       buzzer.play();
     }
-    if (gifCache.cache.length < 5) {
+    if (gifCache.cache.length < 1) {
       newGifToCache();
     }
   }
